@@ -112,12 +112,12 @@ workflows:
     jobs:
       - build-frontend
           filters:
-                branches:
-                  only: [ master ]
+            branches:
+              only: [ master ]
       - build-backend
           filters:
-                branches:
-                  only: [ master ]
+            branches:
+              only: [ master ]
       - test-backend:
           requires:
             - build-backend
