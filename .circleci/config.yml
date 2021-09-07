@@ -78,6 +78,33 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+  
+  test-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run: 
+          name: Run Frontend Tests
+          command: |
+            npm i --prefix frontend
+            npm run test --prefix frontend
+      
+                
+  test-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run: 
+          name: Run Backend Tests
+          command: |
+            npm i --prefix backend
+            npm run test --prefix backend
 
             
 workflows:
@@ -85,4 +112,10 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
+      - test_backend:
+          requires:
+            - build_backend
+      - test_frontend:
+          requires:
+            - build_frontend
 
