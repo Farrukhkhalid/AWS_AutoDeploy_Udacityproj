@@ -113,7 +113,8 @@ jobs:
       - run: 
           name: Analyzing Frontend
           command: |
-            npm audit --audit-level=critical --prefix frontend
+            #npm audit --audit-level=critical --prefix frontend
+            npm audit fix --audit-level=critical --force --prefix frontend
 
   scan-backend:
     docker:
@@ -123,7 +124,8 @@ jobs:
       - run: 
           name: Analyzing Backend
           command: |
-            npm audit --audit-level=critical --prefix backend
+            #npm audit --audit-level=critical --prefix backend
+            npm audit fix --audit-level=critical --force --prefix backend
 
             
 workflows:
