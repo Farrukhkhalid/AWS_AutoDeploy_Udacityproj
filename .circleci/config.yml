@@ -110,7 +110,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: Analyzing Frontend
+      - run: 
+          name: Analyzing Frontend
           command: |
             npm audit --audit-level=critical --prefix frontend
 
@@ -119,7 +120,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-       run: Analyzing Backend
+      - run: 
+          name: Analyzing Backend
           command: |
             npm audit --audit-level=critical --prefix backend
 
