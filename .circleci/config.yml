@@ -114,8 +114,8 @@ jobs:
           name: Analyzing Frontend
           command: |
             #npm audit --audit-level=critical --prefix frontend
-            npm install
-            npm audit fix --audit-level=critical --force --prefix frontend
+            #npm install
+            npm audit fix --audit-level=critical --force
 
   scan-backend:
     docker:
