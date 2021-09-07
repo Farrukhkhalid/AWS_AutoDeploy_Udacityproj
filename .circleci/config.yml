@@ -91,7 +91,6 @@ jobs:
           command: |
             npm i --prefix frontend
             npm run test --prefix frontend
-      
                 
   test-backend:
     docker:
@@ -105,6 +104,24 @@ jobs:
           command: |
             npm i --prefix backend
             npm run test --prefix backend
+            
+  scan-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: Analyzing Frontend
+          command: |
+            npm audit --audit-level=critical --prefix frontend
+
+  scan-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+       run: Analyzing Backend
+          command: |
+            npm audit --audit-level=critical --prefix backend
 
             
 workflows:
@@ -118,4 +135,8 @@ workflows:
       - test-frontend:
           requires:
             - build-frontend
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
 
