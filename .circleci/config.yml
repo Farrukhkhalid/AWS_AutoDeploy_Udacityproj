@@ -43,8 +43,11 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       # My code here
-      - run: npm i --prefix frontend
-      - run: npm run lint --prefix frontend
+      - run:
+          name: Build Frontend
+          command: |
+            npm i --prefix frontend
+            npm run lint --prefix frontend
       - persist_to_workspace:
           root: ~/
           paths:
@@ -62,8 +65,11 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       # my code here
-      - run: npm i --prefix backend
-      - run: npm run lint --prefix backend
+      - run:
+          name: Build Backend
+          command: |
+            npm i --prefix backend
+            npm run lint --prefix backend
       - persist_to_workspace:
           root: ~/
           paths:
