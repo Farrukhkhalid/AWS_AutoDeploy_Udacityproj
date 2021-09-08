@@ -165,11 +165,13 @@ workflows:
   default:
     jobs:
       - build-frontend:
-          filter:
-            only: [main]
+          filters:
+            branches:
+              only: [main]
       - build-backend:
           filter:
-            only: [main]
+            branches: 
+              only: [main]
       - test-backend:
           requires:
             - build-backend
