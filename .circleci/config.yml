@@ -6,32 +6,30 @@ commands:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
       workflow_id:
-        type: string
-      # Add parameter here   
+        type: string   
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            # Your code here
-            exit 1
-  revert-migrations:
+            echo "Destroying environment: <<parameters.workflow_id>> "
+            aws cloudformation delete-stack --stack-name udapeople-backend-prod-<<parameters.workflow_id>>
+            aws s3 rm s3://udapeople-prod-<<parameters.workflow_id>> --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-prod-<<parameters.workflow_id>>
+  
+  undo-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     #parameters:
       # Add parameter here     
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
+          when: on_fail
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
-            if(( $SUCCESS==1 )); 
-            then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+            cd ~/project/backend
+            if [[ -f "~/project/.circleci/outputs/db_migration_success" ]]; then
+              npm i
+              npm run migration:revert
             fi
             
 jobs:
@@ -127,21 +125,61 @@ jobs:
           command: |
             #npm audit --audit-level=critical --prefix backend
             npm audit fix --audit-level=critical --force --prefix backend
+            
+  deploy_backend_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Deploy the backend infrastructure using cloudformation
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --parameter-overrides ID="prod-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name udapeople-backend-prod-${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: Save backend URL and IP (for ansible)
+          command: |
+            BACKEND_AWS_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-prod-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            echo "http://$BACKEND_AWS_PUBLIC_IP:3030" >> .circleci/outputs/backend_url.txt
+            echo "[all]" >> .circleci/ansible/inventory.txt
+            echo "$BACKEND_AWS_PUBLIC_IP" >> .circleci/ansible/inventory.txt
+            cat .circleci/outputs/backend_url.txt
+      #- run: yum -y install tar gzip
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/outputs/backend_url.txt
+            - project/.circleci/ansible/inventory.txt
+      - destroy_environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
             
 workflows:
   default:
     jobs:
-      - build-frontend
-      #- build-backend
-      #- test-backend:
-      #    requires:
-      #      - build-backend
-      #- test-frontend:
-      #    requires:
-      #      - build-frontend
-      #- scan-backend:
-      #    requires: [build-backend]
+      - build-frontend:
+          filters:
+            branches:
+              only: [main]
+      - build-backend:
+          filters:
+            branches: 
+              only: [main]
+      - test-backend:
+          requires:
+            - build-backend
+      - test-frontend:
+          requires:
+            - build-frontend
+      - scan-backend:
+          requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
+      - deploy_backend_infrastructure:
+          requires: [scan-backend]
 
