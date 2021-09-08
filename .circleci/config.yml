@@ -169,7 +169,7 @@ workflows:
             branches:
               only: [main]
       - build-backend:
-          filter:
+          filters:
             branches: 
               only: [main]
       - test-backend:
