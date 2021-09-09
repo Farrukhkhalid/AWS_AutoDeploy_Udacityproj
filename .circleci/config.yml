@@ -181,9 +181,12 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Install awscli
+          name: Install Dependencies
           command: |
-            pip install awscli
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Run DB migrations
           command: |
@@ -384,13 +387,17 @@ workflows:
           requires:
             - build-frontend
       - scan-backend:
-          requires: [build-backend]
+          requires: 
+            - build-backend
       - scan-frontend:
-          requires: [build-frontend]
+          requires: 
+            - build-frontend
       - deploy-backend-infrastructure:
-          requires: [scan-backend]
+          requires: 
+            - scan-backend
       - deploy-frontend-infrastructure:
-          requires: [scan-frontend]
+          requires: 
+            - scan-frontend
       - run-migrations-for-backend:
           requires:
             - deploy-backend-infrastructure
