@@ -177,6 +177,8 @@ jobs:
           name: Setup Prometheus and Install dependencies
           command: |
             cd .circleci/ansible
+            ls -la
+            cat inventory
             ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i inventory configure-server.yaml
       - destroy-environment:
@@ -367,19 +369,19 @@ workflows:
 #           filters:
 #             branches:
 #               only: [main]
-#       - build-backend:
-#           filters:
-#             branches: 
-#               only: [main]
+      - build-backend:
+          filters:
+            branches: 
+              only: [main]
 #       - test-backend:
 #           requires:
 #             - build-backend
 #       - test-frontend:
 #           requires:
 #             - build-frontend
-#       - scan-backend:
-#           requires: 
-#             - test-backend
+      - scan-backend:
+          requires: 
+            - test-backend
 #       - scan-frontend:
 #           requires: 
 #             - test-frontend
