@@ -172,7 +172,27 @@ jobs:
               --stack-name udapeople-frontend-prod-${CIRCLE_WORKFLOW_ID:0:7}
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-
+  
+  configure-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            pip install awscli
+      - add_ssh_keys:
+          fingerprints: [ "83:e8:42:42:7b:75:f1:21:26:5c:9d:3b:4f:ae:c6:2e" ]
+      - run:
+          name: Setup Prometheus and Install dependencies
+          command: |
+            ansible-playbook -i ~/project/.circleci/ansible/inventory ~/project/.circleci/ansible/configure-server.yaml
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+  
   run-migrations-for-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -236,15 +256,12 @@ jobs:
       - run:
           name: Setup EC2 instance & copy compiled backend to the EC2 instance
           command: |
-            ls ~/project/.circleci/ansible/roles/deploy_backend/files/
-            cd ~/project/backend
-            ansible-galaxy install weareinteractive.environment
-            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/playbook.yml
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-server.yaml
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - undo-migrations
 
-  package-frontend-artifact:
+  deploy-frontend-artifact:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -265,6 +282,11 @@ jobs:
             npm i
             npm install typescript@rc
             npm run build
+      - run:
+          name: Copy frontend to s3 bucket.
+          command: |
+            cd ~/project/frontend
+            aws s3 cp dist s3://udapeople-prod-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - persist_to_workspace:
           root: ~/
           paths:
@@ -272,28 +294,7 @@ jobs:
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - undo-migrations
-
-  deploy-frontend-artifact:
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update curl tar
-            pip install awscli
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Copy frontend to s3 bucket.
-          command: |
-            cd ~/project/frontend
-            aws s3 cp dist s3://udapeople-prod-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo-migrations
-
+  
   smoke-test-frontend:
     docker:
       - image: python:3.7-alpine3.11
@@ -310,7 +311,7 @@ jobs:
           command: |
             if curl -s http://udapeople-prod-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.eu-central-1.amazonaws.com/ | grep "Welcome"
             then
-            return 0
+            return 1
             else
             return 1
             fi
@@ -388,29 +389,29 @@ workflows:
             - build-frontend
       - scan-backend:
           requires: 
-            - build-backend
+            - test-backend
       - scan-frontend:
           requires: 
-            - build-frontend
+            - test-frontend
       - deploy-backend-infrastructure:
           requires: 
             - scan-backend
       - deploy-frontend-infrastructure:
           requires: 
             - scan-frontend
+      - configure-backend:
+          requires:
+            - deploy-backend-infrastructure
       - run-migrations-for-backend:
           requires:
             - deploy-backend-infrastructure
       - deploy-backend-artifact:
           requires:
             - run-migrations-for-backend
-      - package-frontend-artifact:
+      - deploy-frontend-artifact:
           requires:
             - deploy-frontend-infrastructure
             - run-migrations-for-backend
-      - deploy-frontend-artifact:
-          requires:
-            - package-frontend-artifact
       - smoke-test-backend:
           requires:
             - deploy-backend-artifact
