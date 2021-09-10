@@ -178,10 +178,10 @@ jobs:
           name: Setup Prometheus and Install dependencies
           command: |
             cd .circleci/ansible
-            ls -la
+            #ls -la
             cat inventory.txt
             ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i inventory configure-server.yaml
+            ansible-playbook -i inventory.txt configure-server.yaml
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
   
@@ -366,29 +366,29 @@ jobs:
 workflows:
   default:
     jobs:
-#       - build-frontend:
-#           filters:
-#             branches:
-#               only: [main]
+      - build-frontend:
+          filters:
+            branches:
+              only: [main]
       - build-backend:
           filters:
             branches: 
               only: [main]
-#       - test-backend:
-#           requires:
-#             - build-backend
+      - test-backend:
+          requires:
+            - build-backend
 #       - test-frontend:
 #           requires:
 #             - build-frontend
       - scan-backend:
           requires: 
             - build-backend
-#       - scan-frontend:
-#           requires: 
-#             - test-frontend
-      - deploy-backend-infrastructure
-#           requires: 
-#             - scan-backend
+      - scan-frontend:
+          requires: 
+            - test-frontend
+      - deploy-backend-infrastructure:
+          requires: 
+            - scan-backend
       - deploy-frontend-infrastructure
 #           requires: 
 #             - scan-frontend
