@@ -178,10 +178,11 @@ jobs:
           name: Setup Prometheus and Install dependencies
           command: |
             cd .circleci/ansible
+            chmod 400 ubuntu_key.pem
             #ls -la
             cat inventory.txt
             ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i inventory.txt configure-server.yaml
+            ansible-playbook -i inventory.txt configure-server.yaml --private-key ubuntu_key.pem
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
   
@@ -249,7 +250,8 @@ jobs:
           name: Setup EC2 instance & copy compiled backend to the EC2 instance
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt deploy-server.yaml
+            chmod 400 ubuntu_key.pem
+            ansible-playbook -i inventory.txt deploy-server.yaml --private-key ubuntu_key.pem
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - undo-migrations
@@ -395,6 +397,7 @@ workflows:
       - configure-backend:
           requires:
             - deploy-backend-infrastructure
+            - deploy-frontend-infrastructure
       - run-migrations-for-backend:
           requires:
             - configure-backend
