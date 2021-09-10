@@ -377,9 +377,9 @@ workflows:
       - test-backend:
           requires:
             - build-backend
-#       - test-frontend:
-#           requires:
-#             - build-frontend
+      - test-frontend:
+          requires:
+            - build-frontend
       - scan-backend:
           requires: 
             - build-backend
@@ -389,9 +389,9 @@ workflows:
       - deploy-backend-infrastructure:
           requires: 
             - scan-backend
-      - deploy-frontend-infrastructure
-#           requires: 
-#             - scan-frontend
+      - deploy-frontend-infrastructure:
+          requires: 
+            - scan-frontend
       - configure-backend:
           requires:
             - deploy-backend-infrastructure
