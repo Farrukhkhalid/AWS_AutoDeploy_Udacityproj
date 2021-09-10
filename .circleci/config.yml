@@ -383,10 +383,10 @@ workflows:
 #       - scan-frontend:
 #           requires: 
 #             - test-frontend
-      - deploy-backend-infrastructure:
+      - deploy-backend-infrastructure
 #           requires: 
 #             - scan-backend
-      - deploy-frontend-infrastructure:
+      - deploy-frontend-infrastructure
 #           requires: 
 #             - scan-frontend
       - configure-backend:
