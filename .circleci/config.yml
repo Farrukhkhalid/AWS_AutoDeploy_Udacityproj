@@ -170,7 +170,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible zip
+            apk add --update ansible openssh zip
             pip install awscli
       - add_ssh_keys:
           fingerprints: [ "83:e8:42:42:7b:75:f1:21:26:5c:9d:3b:4f:ae:c6:2e" ]
