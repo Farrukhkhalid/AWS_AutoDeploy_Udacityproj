@@ -14,7 +14,7 @@ commands:
           command: |
             echo "Destroying environment: <<parameters.workflow_id>> "
             aws cloudformation delete-stack --stack-name udapeople-backend-prod-<<parameters.workflow_id>>
-            #aws s3 rm s3://udapeople-prod-<<parameters.workflow_id>> --recursive
+            aws s3 rm s3://udapeople-prod-<<parameters.workflow_id>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-prod-<<parameters.workflow_id>>
   
   undo-migrations:
@@ -311,7 +311,7 @@ jobs:
           command: |
             if curl -s http://udapeople-prod-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.eu-central-1.amazonaws.com/ | grep "Welcome"
             then
-            return 1
+            return 0
             else
             return 1
             fi
@@ -376,14 +376,8 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend:
-          filters:
-            branches:
-              only: [main]
-      - build-backend:
-          filters:
-            branches: 
-              only: [main]
+      - build-frontend
+      - build-backend
       - test-backend:
           requires:
             - build-backend
@@ -399,9 +393,15 @@ workflows:
       - deploy-backend-infrastructure:
           requires: 
             - scan-backend
+          filters:
+            branches:
+              only: [main]
       - deploy-frontend-infrastructure:
           requires: 
             - scan-frontend
+          filters:
+            branches:
+              only: [main]
       - configure-backend:
           requires:
             - deploy-backend-infrastructure
