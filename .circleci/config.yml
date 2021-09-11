@@ -307,7 +307,7 @@ jobs:
             apk add --update curl
             pip install awscli
       - run:
-          name: Package frontend app
+          name: Smoke test frontend app
           command: |
             if curl -s http://udapeople-prod-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.eu-central-1.amazonaws.com/ | grep "Welcome"
             then
@@ -331,7 +331,7 @@ jobs:
             apk add --update curl
             pip install awscli
       - run:
-          name: Test backend app.
+          name: Smoke test backend app.
           command: |
             API_URL=`cat .circleci/outputs/backend_url.txt`
             echo $API_URL
@@ -360,6 +360,9 @@ jobs:
               --template-file .circleci/files/cloudfront.yml \
               --parameter-overrides ID="prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --stack-name udapeople-prod-cloudfront
+      - run:
+          name: Clean up old environment
+          command: |
             if printf '%s\n' "${STACKS[@]}" | grep -q "$OLD_WORKFLOW_ID"; then
               echo "Removing previous stack"
               aws s3 rm "s3://udapeople-${OLD_WORKFLOW_ID}" --recursive
