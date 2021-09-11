@@ -22,6 +22,7 @@
   shell: |
     export
     cd ~/backend_app
+    ls -la
     pm2 start main.js
   register: execute_node
 
