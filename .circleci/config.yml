@@ -41,6 +41,7 @@ jobs:
       - run:
           name: Build Frontend
           command: |
+            unzip frontend.zip
             npm i --prefix frontend
             npm run lint --prefix frontend
       - persist_to_workspace:
