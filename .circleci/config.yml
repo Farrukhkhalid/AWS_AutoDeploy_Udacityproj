@@ -278,10 +278,10 @@ jobs:
             export API_URL=`cat .circleci/outputs/backend_url.txt`
             echo "API_URL: $API_URL"
             cd ~/project/frontend
-            npm i --prefix frontend
+            npm i
             #npm i
             npm install typescript@rc
-            npm run build --prefix frontend
+            npm run build
       - run:
           name: Copy frontend to s3 bucket.
           command: |
@@ -413,6 +413,7 @@ workflows:
           requires:
             - deploy-frontend-infrastructure
             - run-migrations-for-backend
+            - deploy-backend-artifact
       - smoke-test-backend:
           requires:
             - deploy-backend-artifact
