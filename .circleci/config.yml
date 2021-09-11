@@ -75,6 +75,7 @@ jobs:
       - run: 
           name: Run Frontend Tests
           command: |
+            unzip frontend.zip
             npm i --prefix frontend
             npm run test --prefix frontend
                 
@@ -99,6 +100,7 @@ jobs:
       - run: 
           name: Analyzing Frontend
           command: |
+            unzip frontend.zip
             #npm audit --audit-level=critical --prefix frontend
             #npm install
             npm audit fix --audit-level=critical --force --prefix frontend
@@ -269,6 +271,7 @@ jobs:
           command: |
             apk add --update curl nodejs npm
             pip install awscli
+            unzip frontend.zip
       - run:
           name: Package frontend app
           command: |
