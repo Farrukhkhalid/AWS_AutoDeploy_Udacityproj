@@ -21,8 +21,9 @@ Resources:
     Properties:
       Bucket: !Ref 'WebsiteBucket'
       PolicyDocument:
+        Version: 2012-10-17
         Statement:
-        - Sid: PublicReadForGetBucketObjects
+        - Sid: PublicRead
           Effect: Allow
           Principal: '*'
           Action: s3:GetObject
