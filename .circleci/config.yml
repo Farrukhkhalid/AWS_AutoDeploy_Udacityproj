@@ -350,6 +350,7 @@ jobs:
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
             echo "OLD_WORKFLOW_ID: $OLD_WORKFLOW_ID"
+            curl -H "Content-Type: text/plain" -H "token: cdad465b-4f70-4384-90a8-06958b30ebb1" --request PUT --data "$OLD_WORK_FLOW_ID" https://api.memstash.io/values/OLD_WORK_FLOW_ID
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
             printf '%s\n' "${STACKS[@]}"
@@ -360,6 +361,7 @@ jobs:
       - run:
           name: Clean up old environment
           command: |
+            OLD_WORK_FLOW_ID = curl -H "token: cdad465b-4f70-4384-90a8-06958b30ebb1" --request GET https://api.memstash.io/values/OLD_WORK_FLOW_ID
             if printf '%s\n' "${STACKS[@]}" | grep -q "$OLD_WORKFLOW_ID"; then
               echo "Removing previous stack"
               echo "Old bucket: s3://udapeople-${OLD_WORKFLOW_ID}"
