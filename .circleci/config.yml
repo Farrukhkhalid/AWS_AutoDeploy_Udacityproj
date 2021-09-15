@@ -19,8 +19,6 @@ commands:
   
   undo-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    #parameters:
-      # Add parameter here     
     steps:
       - run:
           name: Revert migrations
@@ -207,7 +205,9 @@ jobs:
           name: Run DB migrations
           command: |
             cd backend
+            npm install
             npm run migrations >> migration_output.txt
+            echo "Run Migrations finished!!!"
             cat migration_output.txt
       - run:
           name: Store migration result in a file.
