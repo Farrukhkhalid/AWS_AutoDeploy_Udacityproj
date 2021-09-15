@@ -246,7 +246,6 @@ jobs:
           command: |
             cd ~/project/backend
             npm i
-            npm audit fix
             npm run build
             cd dist
             cp ../package.json .
