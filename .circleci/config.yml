@@ -245,6 +245,7 @@ jobs:
           name: Build backend app
           command: |
             cd ~/project/backend
+            pwd
             npm i
             npm run build
             cp package* ./dist
