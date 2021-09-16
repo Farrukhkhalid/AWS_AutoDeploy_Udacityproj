@@ -3,19 +3,18 @@
   file:
     path: ~/udapeople_app
     state: directory
-
+    
 - name: "Copy compiled backend app"
   become: true
   copy:
     src: dist.zip
     dest: /home/ubuntu/udapeople_app
-
-- name: "Check dir after copy"
-  become: true
-  shell: |
+  shell:
     cd ~/udapeople_app
     ls -l
   register: copied_files
+  
+- name: "Print after copy"
   debug:
     msg: "{{ copied_files.stdout_lines }}"
     
@@ -35,7 +34,7 @@
   args:
     chdir: /home/ubuntu/udapeople_app
   
-- name: "Print ls -l output"
+- name: "Print list after unzip"
   debug:
     msg: "{{ dir_files.stdout_lines }}"
 
