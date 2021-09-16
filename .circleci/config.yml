@@ -238,7 +238,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update curl nodejs rsync openssh npm ansible zip
+            apk add --update curl nodejs rsync openssh npm ansible zip tar
             pip install awscli
             unzip backend.zip
       - run:
@@ -248,8 +248,6 @@ jobs:
             npm i
             npm run build
             cp package* ./dist
-            cd dist
-            #cp ../package.json .
             zip -rq dist.zip *
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
             mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
