@@ -245,7 +245,6 @@ jobs:
           name: Build backend app
           command: |
             cd ~/project/backend
-            pwd
             npm i
             npm run build
             cp package* ./dist
@@ -254,6 +253,9 @@ jobs:
             zip -rq dist.zip *
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
             mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
+            cd ~/project/.circleci/ansible/roles/deploy/files/
+            pwd
+            ls -l
       - add_ssh_keys:
           fingerprints: [ "83:e8:42:42:7b:75:f1:21:26:5c:9d:3b:4f:ae:c6:2e" ]
       - run:
