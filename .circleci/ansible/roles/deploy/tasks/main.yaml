@@ -1,33 +1,32 @@
 ---
-  - name: "show remote environment"
-    shell: env
+- name: "Creates backend app directory"
+  file:
+    path: ~/udapeople_app
+    state: directory
 
-  - name: "copy backend binaries"
-    become: yes
-    synchronize:
-      src: ../../backend/dist
-      dest: /home/ubuntu/uda_app
-      recursive: true
+- name: "Copy compiled backend app"
+  copy:
+    src: dist.zip
+    dest: "~/udapeople_app/dist.zip"
 
-  - name: "copy node_modules"
-    become: yes
-    synchronize:
-      src: ../../backend/node_modules
-      dest: /home/ubuntu/uda_app/dist
-      recursive: true
+- name: "Unzip backend files to correct directory"
+  shell: |
+    cd ~/udapeople_app
+    unzip dist.zip
+    rm -rf dist.zip
 
-  - name: "delete anything that might already be running"
-    become: true
-    command: pm2 delete all
-    ignore_errors: true
+- name: "Install dependencies for project"
+  shell: |
+    cd ~/udapeople_app
+    npm install
 
-  - name: "start server"
-    become: true
-    command: pm2 start main.js --update-env 
-              #pm2 start -f ./main.js
-    args:
-      chdir: /home/ubuntu/uda_app/dist
-    environment:
+- name: "Executing node"
+  shell: |
+    export
+    cd ~/udapeople_app
+    pm2 start main.js
+  register: execute_node
+  environment:
      ENVIRONMENT: production
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
      TYPEORM_MIGRATIONS_DIR: "./migrations"
@@ -38,3 +37,11 @@
      TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
      TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
      TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+
+- name: print message
+  debug:
+    msg: "{{ execute_node.stdout_lines }}"
+
+- name: "Configure pm2 to start as service"
+  shell: |
+    env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
