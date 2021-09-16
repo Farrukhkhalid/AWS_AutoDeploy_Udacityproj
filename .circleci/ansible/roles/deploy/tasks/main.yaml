@@ -24,6 +24,7 @@
   shell: |
     export
     cd ~/udapeople_app
+    cd dist
     pm2 start main.js
   register: execute_node
   environment:
