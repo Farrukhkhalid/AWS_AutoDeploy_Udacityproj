@@ -20,7 +20,11 @@
   shell: |
     cd ~/udapeople_app
     rm -rf dist.zip
-    ls
+    ls -l
+  register: dir_files
+  debug:
+    var: dir_files.stdout_lines
+  
 
 - name: "Install dependencies for project"
   shell: |
