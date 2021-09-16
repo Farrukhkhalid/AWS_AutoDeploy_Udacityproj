@@ -41,7 +41,9 @@
   become: true
   shell: |
     export
-    pm2 start main.js
+    npm i
+    pm2 start npm -- run start
+    #pm2 start main.js
   args:
     chdir: /home/ubuntu/udapeople_app/dist
   register: execute_node
@@ -61,6 +63,6 @@
   debug:
     msg: "{{ execute_node.stdout_lines }}"
 
-- name: "Configure pm2 to start as service"
-  shell: |
-    env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+# - name: "Configure pm2 to start as service"
+#   shell: |
+#     env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
