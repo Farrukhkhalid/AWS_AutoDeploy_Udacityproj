@@ -22,9 +22,10 @@
     rm -rf dist.zip
     ls -l
   register: dir_files
-  debug:
-    var: dir_files.stdout_lines
   
+- name: "Print ls -l output"
+  debug:
+    msg: "{{ dir_files.stdout_lines }}"
 
 - name: "Install dependencies for project"
   shell: |
