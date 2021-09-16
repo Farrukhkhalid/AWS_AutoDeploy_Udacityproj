@@ -26,9 +26,9 @@
   args:
     chdir: /home/ubuntu/udapeople_app
   
-- name: "Print list after unzip"
-  debug:
-    msg: "{{ dir_files.stdout_lines }}"
+# - name: "Print list after unzip"
+#   debug:
+#     msg: "{{ dir_files.stdout_lines }}"
 
 - name: "Install dependencies for project"
   become: true
@@ -42,7 +42,8 @@
   shell: |
     export
     npm i
-    pm2 start npm -- run start
+    pm2 start -f main.js
+    #pm2 start npm -- run start
     #pm2 start main.js
   args:
     chdir: /home/ubuntu/udapeople_app/dist
