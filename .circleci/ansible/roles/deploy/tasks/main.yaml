@@ -9,7 +9,7 @@
   copy:
     src: dist.zip
     dest: /home/ubuntu/udapeople_app
-  
+
 - name: "Check dir after copy"
   become: true
   shell: |
