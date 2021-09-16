@@ -18,9 +18,9 @@
     
 - name: "Unzip backend files to correct directory"
   shell: |
-    sudo apt install unzip
     cd ~/udapeople_app
     rm -rf dist.zip
+    ls
 
 - name: "Install dependencies for project"
   shell: |
@@ -29,10 +29,9 @@
 
 - name: "Executing node"
   shell: |
+    cd ~/udapeople_app/dist
     export
     pm2 start main.js
-  args:
-      chdir: /home/ubuntu/udapeople_app/dist
   register: execute_node
   environment:
      ENVIRONMENT: production
