@@ -248,10 +248,6 @@ jobs:
             npm i
             npm run build
             cp package* ./dist
-            cd ./dist
-            echo "Print list in ./dist"
-            ls -l
-            cd ~/project/backend
             #tar cvzf dist.tar.gz dist
             zip -rq dist.zip dist
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
