@@ -8,13 +8,13 @@
   copy:
     src: dist.zip
     dest: "~/udapeople_app/dist.zip"
-
+    
 - name: "Install unzip package"
-    become: true
-    apt:
-      name: zip
-      state: present
-      update_cache: true
+  become: true
+  apt:
+    name: unzip
+    state: present
+    update_cache: true
     
 - name: "Unzip backend files to correct directory"
   shell: |
