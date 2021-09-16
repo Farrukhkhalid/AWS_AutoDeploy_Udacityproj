@@ -13,7 +13,7 @@
     become: yes
     synchronize:
       src: ../../backend/node_modules
-      dest: /home/ubuntu/uda_app
+      dest: /home/ubuntu/uda_app/dist
       recursive: true
 
   - name: "delete anything that might already be running"
@@ -23,7 +23,8 @@
 
   - name: "start server"
     become: true
-    command: pm2 start -f ./main.js
+    command: pm2 start main.js --update-env 
+              #pm2 start -f ./main.js
     args:
       chdir: /home/ubuntu/uda_app/dist
     environment:
