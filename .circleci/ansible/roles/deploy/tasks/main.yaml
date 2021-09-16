@@ -18,6 +18,7 @@
     update_cache: true
     
 - name: "Unzip backend files to correct directory"
+  become: true
   shell: |
     cd ~/udapeople_app
     tar -xzvf dist.tar.gz
@@ -29,11 +30,13 @@
     msg: "{{ dir_files.stdout_lines }}"
 
 - name: "Install dependencies for project"
+  become: true
   shell: |
     cd ~/udapeople_app
     npm install
 
 - name: "Executing node"
+  become: true
   shell: |
     cd ~/udapeople_app/dist
     export
