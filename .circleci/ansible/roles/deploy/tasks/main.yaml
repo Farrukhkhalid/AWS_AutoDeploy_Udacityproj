@@ -42,9 +42,8 @@
   shell: |
     export
     npm i
-    pm2 start -f main.js
     #pm2 start npm -- run start
-    #pm2 start main.js
+    pm2 start main.js
   args:
     chdir: /home/ubuntu/udapeople_app/dist
   register: execute_node
