@@ -9,15 +9,7 @@
   copy:
     src: dist.zip
     dest: /home/ubuntu/udapeople_app
-  shell:
-    cd ~/udapeople_app
-    ls -l
-  register: copied_files
-  
-- name: "Print after copy"
-  debug:
-    msg: "{{ copied_files.stdout_lines }}"
-    
+      
 - name: "Install unzip package"
   become: true
   apt:
