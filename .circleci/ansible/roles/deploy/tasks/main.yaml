@@ -8,7 +8,16 @@
   become: true
   copy:
     src: dist.zip
-    dest: ~/
+    dest: /home/ubuntu/udapeople_app
+  
+- name: "Check dir after copy"
+  become: true
+  shell: |
+    cd ~/udapeople_app
+    ls -l
+  register: copied_files
+  debug:
+    msg: "{{ copied_files.stdout_lines }}"
     
 - name: "Install unzip package"
   become: true
@@ -23,6 +32,8 @@
     unzip dist.zip
     ls -l
   register: dir_files
+  args:
+    chdir: /home/ubuntu/udapeople_app
   
 - name: "Print ls -l output"
   debug:
@@ -32,13 +43,16 @@
   become: true
   shell: |
     npm install
+  args:
+    chdir: /home/ubuntu/udapeople_app
 
 - name: "Executing node"
   become: true
   shell: |
-    cd ~/dist
     export
     pm2 start main.js
+  args:
+    chdir: /home/ubuntu/udapeople_app
   register: execute_node
   environment:
      ENVIRONMENT: production
