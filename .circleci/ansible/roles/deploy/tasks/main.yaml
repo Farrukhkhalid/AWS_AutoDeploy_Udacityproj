@@ -5,8 +5,9 @@
     state: directory
 
 - name: "Copy compiled backend app"
+  become: true
   copy:
-    src: /root/project/dist.zip
+    src: dist.zip
     dest: ~/udapeople_app
     
 - name: "Install unzip package"
