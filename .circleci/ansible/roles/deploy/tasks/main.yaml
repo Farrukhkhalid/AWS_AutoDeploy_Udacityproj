@@ -9,11 +9,17 @@
     src: dist.zip
     dest: "~/udapeople_app/dist.zip"
 
+- name: "Install unzip package"
+    become: true
+    apt:
+      name: zip
+      state: present
+      update_cache: true
+    
 - name: "Unzip backend files to correct directory"
   shell: |
     sudo apt install unzip
     cd ~/udapeople_app
-    unzip dist.zip
     rm -rf dist.zip
 
 - name: "Install dependencies for project"
