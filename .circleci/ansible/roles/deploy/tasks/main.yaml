@@ -8,7 +8,7 @@
   become: true
   copy:
     src: dist.tar.gz
-    dest: ~/udapeople_app
+    dest: ~/
     
 - name: "Install unzip package"
   become: true
@@ -20,7 +20,6 @@
 - name: "Unzip backend files to correct directory"
   become: true
   shell: |
-    cd ~/udapeople_app
     tar -xzvf dist.tar.gz
     ls -l
   register: dir_files
@@ -32,13 +31,12 @@
 - name: "Install dependencies for project"
   become: true
   shell: |
-    cd ~/udapeople_app
     npm install
 
 - name: "Executing node"
   become: true
   shell: |
-    cd ~/udapeople_app/dist
+    cd ~/dist
     export
     pm2 start main.js
   register: execute_node
