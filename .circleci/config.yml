@@ -248,9 +248,14 @@ jobs:
             npm i
             npm run build
             cp package* ./dist
-            zip -rq dist.zip *
+            cd ./dist
+            echo "Print list in ./dist"
+            ls -l
+            cd ~/project/backend
+            tar cvzf dist.tar.gz dist
+            #zip -rq dist.zip *
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-            mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
+            mv dist.tar.gz ~/project/.circleci/ansible/roles/deploy/files/
 
       - persist_to_workspace:
           root: ~/
