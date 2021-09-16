@@ -261,9 +261,9 @@ jobs:
             cd .circleci/ansible
             chmod 400 ubuntu_key.pem
             ansible-playbook -i inventory.txt deploy-server.yaml --private-key ubuntu_key.pem
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo-migrations
+#       - destroy-environment:
+#           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+#       - undo-migrations
 
   deploy-frontend-artifact:
     docker:
