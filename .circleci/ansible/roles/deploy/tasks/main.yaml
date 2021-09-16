@@ -43,7 +43,7 @@
     export
     pm2 start main.js
   args:
-    chdir: /home/ubuntu/udapeople_app
+    chdir: /home/ubuntu/udapeople_app/dist
   register: execute_node
   environment:
      ENVIRONMENT: production
