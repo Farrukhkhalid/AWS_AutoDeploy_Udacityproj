@@ -253,7 +253,7 @@ jobs:
             ls -l
             cd ~/project/backend
             #tar cvzf dist.tar.gz dist
-            zip -rq dist.zip *
+            zip -rq dist.zip dist
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
             mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
 
