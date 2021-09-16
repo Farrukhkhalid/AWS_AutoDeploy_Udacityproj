@@ -252,15 +252,15 @@ jobs:
             echo "Print list in ./dist"
             ls -l
             cd ~/project/backend
-            tar cvzf dist.tar.gz dist
-            #zip -rq dist.zip *
+            #tar cvzf dist.tar.gz dist
+            zip -rq dist.zip *
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-            mv dist.tar.gz ~/project/.circleci/ansible/roles/deploy/files/
+            mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
 
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/roles/deploy/files/dist.tar.gz
+            - project/.circleci/ansible/roles/deploy/files/dist.zip
       - add_ssh_keys:
           fingerprints: [ "83:e8:42:42:7b:75:f1:21:26:5c:9d:3b:4f:ae:c6:2e" ]
           
@@ -274,6 +274,8 @@ jobs:
             ls -l
             cd ~/project/.circleci/ansible
             chmod 400 ubuntu_key.pem
+            echo "[all]" >> inventory.txt
+            echo "54.211.13.45" >> inventory.txt
             ansible-playbook -i inventory.txt deploy-server.yaml --private-key ubuntu_key.pem
 #       - destroy-environment:
 #           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -410,28 +412,28 @@ workflows:
 #       - scan-frontend:
 #           requires: 
 #             - test-frontend
-      - deploy-backend-infrastructure:
+#       - deploy-backend-infrastructure:
 #           requires: 
 #             - scan-backend
-          filters:
-            branches:
-              only: [main]
+#           filters:
+#             branches:
+#               only: [main]
 #       - deploy-frontend-infrastructure:
 #           requires: 
 #             - scan-frontend
 #           filters:
 #             branches:
 #               only: [main]
-      - configure-backend:
-          requires:
-            - deploy-backend-infrastructure
+#       - configure-backend:
+#           requires:
+#             - deploy-backend-infrastructure
 #             - deploy-frontend-infrastructure
-      - run-migrations-for-backend:
-          requires:
-            - configure-backend
-      - deploy-backend-artifact:
-          requires:
-            - run-migrations-for-backend
+#       - run-migrations-for-backend:
+#           requires:
+#             - configure-backend
+      - deploy-backend-artifact
+#           requires:
+#             - run-migrations-for-backend
 #       - deploy-frontend-artifact:
 #           requires:
 #             - deploy-frontend-infrastructure
