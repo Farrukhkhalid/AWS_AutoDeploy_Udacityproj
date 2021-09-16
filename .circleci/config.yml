@@ -258,7 +258,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/roles/deploy/files/
+            - project/.circleci/ansible/roles/deploy/files/dist.zip
       - add_ssh_keys:
           fingerprints: [ "83:e8:42:42:7b:75:f1:21:26:5c:9d:3b:4f:ae:c6:2e" ]
       - attach_workspace:
@@ -266,7 +266,9 @@ jobs:
       - run:
           name: Setup EC2 instance & copy compiled backend to the EC2 instance
           command: |
-            cd ~project/.circleci/ansible/roles/deploy/files/
+            mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
+            mv dist.zip ~/project/.circleci/ansible/roles/deploy/files/
+            cd ~/project/.circleci/ansible/roles/deploy/files/
             ls -l
             cd ~/project/.circleci/ansible
             chmod 400 ubuntu_key.pem
