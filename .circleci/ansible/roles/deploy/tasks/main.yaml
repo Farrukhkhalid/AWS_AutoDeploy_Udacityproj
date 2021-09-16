@@ -7,7 +7,7 @@
 - name: "Copy compiled backend app"
   become: true
   copy:
-    src: dist.zip
+    src: dist.tar.gz
     dest: ~/udapeople_app
     
 - name: "Install unzip package"
