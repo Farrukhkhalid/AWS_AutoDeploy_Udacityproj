@@ -360,9 +360,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: yum -y install tar gzip
       - attach_workspace:
           at: ~/
-      - run: yum -y install tar gzip
       - run:
           name: Deploy the backend infrastructure using cloudformation
           command: |
