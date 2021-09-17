@@ -405,14 +405,14 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-#           filters:
-#             branches:
-#               only: [stop_CI]
-      - build-backend
-#           filters:
-#             branches:
-#               only: [stop_CI]
+      - build-frontend:
+          filters:
+            branches:
+              only: [stop_CI]
+      - build-backend:
+          filters:
+            branches:
+              only: [stop_CI]
       - test-backend:
           requires:
             - build-backend
