@@ -137,7 +137,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
             #Created Elastic IP for backend
-            export BACKEND_AWS_PUBLIC_IP="34.232.110.202"
+            export BACKEND_AWS_PUBLIC_IP="44.194.75.225"
             echo "http://$BACKEND_AWS_PUBLIC_IP:3030" >> .circleci/outputs/backend_url.txt
             echo "[all]" >> .circleci/ansible/inventory.txt
             echo "$BACKEND_AWS_PUBLIC_IP" >> .circleci/ansible/inventory.txt
